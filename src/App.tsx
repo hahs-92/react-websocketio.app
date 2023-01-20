@@ -1,21 +1,28 @@
 import { useState, useEffect } from "react";
 import { io } from "socket.io-client";
 import "./App.css";
+import { IMessage } from "./model/message.model";
 
 // este objecto nos permite comunicarnos con el back
 const socket = io("http://localhost:4000");
 
 function App() {
   const [message, setMessage] = useState("");
+  const [messages, setMessages] = useState<IMessage[]>([]);
 
   const onHandleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     socket.emit("message", message);
+    const newMessage: IMessage = {
+      from: "Me",
+      body: message,
+    };
+    setMessages((prev) => [newMessage, ...prev]);
     setMessage("");
   };
 
-  const receiveMessage = (message: string) => {
-    console.log({ message });
+  const receiveMessage = (message: IMessage) => {
+    setMessages((prev) => [message, ...prev]);
   };
 
   useEffect(() => {
@@ -37,6 +44,17 @@ function App() {
         />
         <button type="submit">Enviar</button>
       </form>
+
+      <section>
+        {messages &&
+          messages.map((m, idx) => (
+            <article key={`${idx} - ${m.from}`}>
+              <p>
+                <strong>{m.from}</strong> -{m.body}
+              </p>
+            </article>
+          ))}
+      </section>
     </div>
   );
 }
