@@ -34,26 +34,34 @@ function App() {
   }, []);
 
   return (
-    <div className="App">
-      <form onSubmit={onHandleSubmit}>
-        <input
-          name="message"
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          type="text"
-        />
-        <button type="submit">Enviar</button>
-      </form>
+    <div className="flex justify-center h-screen bg-zinc-800 text-white">
+      <section className="p-2 flex flex-col h-full w-full max-w-xl overflow-y-auto  bg-zinc-700">
+        <form className="bg-zinc-600 p-10" onSubmit={onHandleSubmit}>
+          <input
+            className="w-full border-2 border-zinc-500 p-2 text-black"
+            name="message"
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            type="text"
+          />
+        </form>
 
-      <section>
-        {messages &&
-          messages.map((m, idx) => (
-            <article key={`${idx} - ${m.from}`}>
-              <p>
-                <strong>{m.from}</strong> -{m.body}
-              </p>
-            </article>
-          ))}
+        <ul className="h-auto">
+          {messages &&
+            messages.map((m, idx) => (
+              <li
+                className={`my-2 p-2 w-3/5 text-sm rounded-md ${
+                  m.from === "Me" ? "bg-sky-700 ml-auto" : "bg-black"
+                }`}
+                key={`${idx} - ${m.from}`}
+              >
+                <p>
+                  <strong>{m.from}</strong>
+                </p>
+                <p className="break-words">{m.body}</p>
+              </li>
+            ))}
+        </ul>
       </section>
     </div>
   );
